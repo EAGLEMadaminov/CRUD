@@ -16,24 +16,6 @@ export default function Home({ text }) {
   const formSearch = useRef(null);
   const copyButtonRef = useRef(null);
 
-  const handleCopy = () => {
-    const clipboard = new ClipboardJS(copyButtonRef.current, {
-      text: () => text,
-    });
-
-    clipboard.on("success", () => {
-      console.log("Text copied to clipboard");
-      clipboard.destroy();
-    });
-
-    clipboard.on("error", (e) => {
-      console.error("Error copying text to clipboard:", e);
-      clipboard.destroy();
-    });
-
-    clipboard.onClick({ trigger: copyButtonRef.current });
-  };
-
   const {
     register,
     handleSubmit,
@@ -82,13 +64,29 @@ export default function Home({ text }) {
     }
   };
 
-  const onSearch = async (data) => {
-    let { data: users } = await axios.get(`/api/users/?q=${data.search}`);
+  const onSearchByName = async (data) => {
+    let { data: users } = await axios.get(`/api/users/?name=${data.search}`);
     setUSersData(users);
+    console.log(users);
     const form = formSearch.current;
     form[0].value = "";
   };
-
+  const onSearchByUserName = async (data) => {
+    let { data: users } = await axios.get(
+      `/api/users/?username=${data.search}`
+    );
+    setUSersData(users);
+    console.log(users);
+    const form = formSearch.current;
+    form[0].value = "";
+  };
+  const onSearchByAddress = async (data) => {
+    let { data: users } = await axios.get(`/api/users/?address=${data.search}`);
+    setUSersData(users);
+    console.log(users);
+    const form = formSearch.current;
+    form[0].value = "";
+  };
   setTimeout(() => {
     setErrorMsg("");
   }, 3_000);
@@ -140,24 +138,92 @@ export default function Home({ text }) {
       </div>
 
       <div className="pt-[120px] dark:text-black">
-        <form
-          ref={formSearch}
-          className="flex w-[800px] mb-10 mx-auto "
-          onSubmit={handleSubmit(onSearch)}
-        >
-          <input
-            type="text"
-            placeholder="Search"
-            {...register("search")}
-            className="w-full border p-2 text-xl Search"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white text-xl p-2 px-3 ml-3"
+        <div className="flex container mx-auto justify-around">
+          <form
+            ref={formSearch}
+            className="flex flex-col  mb-10 mx-auto "
+            onSubmit={handleSubmit(onSearchByName)}
           >
-            Search
-          </button>
-        </form>
+            <label htmlFor="name">Search by name</label>
+            <div className="flex  rounded-[15px]  border bg-white">
+              <input
+                type="text"
+                id="name"
+                placeholder="Search "
+                {...register("search")}
+                className="bg-transparent outline-none p-2"
+              />
+              <button type="submit" className="px-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  class="bi bi-search"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+              </button>
+            </div>
+          </form>
+          <form
+            ref={formSearch}
+            className="flex flex-col  mb-10 mx-auto "
+            onSubmit={handleSubmit(onSearchByUserName)}
+          >
+            <label htmlFor="username">Search by username</label>
+            <div className="flex border rounded-[15px] bg-white">
+              <input
+                type="text"
+                id="username"
+                placeholder="Search "
+                {...register("search")}
+                className=" bg-transparent p-2 outline-none"
+              />
+              <button type="submit" className="px-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  class="bi bi-search"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+              </button>
+            </div>
+          </form>
+          <form
+            ref={formSearch}
+            className="flex flex-col  mb-10 mx-auto "
+            onSubmit={handleSubmit(onSearchByAddress)}
+          >
+            <label htmlFor="address">Search by address</label>
+            <div className="flex rounded-[15px]  border bg-white">
+              <input
+                type="text"
+                id="address"
+                placeholder="Search "
+                {...register("search")}
+                className=" bg-transparent p-2 outline-none"
+              />
+              <button type="submit" className="px-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  class="bi bi-search"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
         <table className="text-center mx-auto w-[800px]">
           <thead>
             <tr>
@@ -178,9 +244,7 @@ export default function Home({ text }) {
                   <td className="mx-3 text-xl p-3">{user?.name}</td>
                   <td className="mx-3 text-xl p-3">{user?.username}</td>
                   <td className="mx-3 text-xl p-3">
-                    <button ref={copyButtonRef} onClick={handleCopy}>
-                      {user?.email}
-                    </button>
+                    <button>{user?.email}</button>
                   </td>
                   <td className="mx-3 text-xl p-3">{user?.contact}</td>
                   <td className="mx-3 text-xl p-3">{user?.address}</td>
