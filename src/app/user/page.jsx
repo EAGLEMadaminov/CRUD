@@ -13,8 +13,9 @@ export default function Home({ text }) {
   const [erorrMsg, setErrorMsg] = useState("");
   const [updateId, setUpdateId] = useState("");
   const [isDetele, setIsDelete] = useState(false);
-  const formSearch = useRef(null);
-  const copyButtonRef = useRef(null);
+  const formSearchName = useRef(null);
+  const formSearchUsername = useRef(null);
+  const formSearchAddress = useRef(null);
 
   const {
     register,
@@ -65,26 +66,28 @@ export default function Home({ text }) {
   };
 
   const onSearchByName = async (data) => {
-    let { data: users } = await axios.get(`/api/users/?name=${data.search}`);
+    let { data: users } = await axios.get(`/api/users/?name=${data.name}`);
     setUSersData(users);
     console.log(users);
-    const form = formSearch.current;
+    const form = formSearchName.current;
     form[0].value = "";
   };
   const onSearchByUserName = async (data) => {
     let { data: users } = await axios.get(
-      `/api/users/?username=${data.search}`
+      `/api/users/?username=${data.username}`
     );
     setUSersData(users);
     console.log(users);
-    const form = formSearch.current;
+    const form = formSearchUsername.current;
     form[0].value = "";
   };
   const onSearchByAddress = async (data) => {
-    let { data: users } = await axios.get(`/api/users/?address=${data.search}`);
+    let { data: users } = await axios.get(
+      `/api/users/?address=${data.address}`
+    );
     setUSersData(users);
     console.log(users);
-    const form = formSearch.current;
+    const form = formSearchAddress.current;
     form[0].value = "";
   };
   setTimeout(() => {
@@ -140,7 +143,7 @@ export default function Home({ text }) {
       <div className="pt-[120px] dark:text-black">
         <div className="flex container mx-auto justify-around">
           <form
-            ref={formSearch}
+            ref={formSearchName}
             className="flex flex-col  mb-10 mx-auto "
             onSubmit={handleSubmit(onSearchByName)}
           >
@@ -150,7 +153,7 @@ export default function Home({ text }) {
                 type="text"
                 id="name"
                 placeholder="Search "
-                {...register("search")}
+                {...register("name")}
                 className="bg-transparent outline-none p-2"
               />
               <button type="submit" className="px-5">
@@ -167,8 +170,9 @@ export default function Home({ text }) {
               </button>
             </div>
           </form>
+
           <form
-            ref={formSearch}
+            ref={formSearchUsername}
             className="flex flex-col  mb-10 mx-auto "
             onSubmit={handleSubmit(onSearchByUserName)}
           >
@@ -178,7 +182,7 @@ export default function Home({ text }) {
                 type="text"
                 id="username"
                 placeholder="Search "
-                {...register("search")}
+                {...register("username")}
                 className=" bg-transparent p-2 outline-none"
               />
               <button type="submit" className="px-5">
@@ -195,8 +199,9 @@ export default function Home({ text }) {
               </button>
             </div>
           </form>
+
           <form
-            ref={formSearch}
+            ref={formSearchAddress}
             className="flex flex-col  mb-10 mx-auto "
             onSubmit={handleSubmit(onSearchByAddress)}
           >
@@ -206,7 +211,7 @@ export default function Home({ text }) {
                 type="text"
                 id="address"
                 placeholder="Search "
-                {...register("search")}
+                {...register("address")}
                 className=" bg-transparent p-2 outline-none"
               />
               <button type="submit" className="px-2">
@@ -224,6 +229,7 @@ export default function Home({ text }) {
             </div>
           </form>
         </div>
+
         <table className="text-center mx-auto w-[800px]">
           <thead>
             <tr>
